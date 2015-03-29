@@ -17,54 +17,54 @@ export default class ReactComponentsListSelect extends React.Component {
     super( props );
 
     this.state = {
-      focusedIndex: -1
+      selectedIndex: -1
     };
   }
 
   componentWillReceiveProps( nextProps ) {
-    if( this.state.focusedIndex > -1 ) {
-      var activeKey = this.props.children[ this.state.focusedIndex ].key;
+    if( this.state.selectedIndex > -1 ) {
+      var activeKey = this.props.children[ this.state.selectedIndex ].key;
       var foundIndex = -1;
       React.Children.forEach( nextProps.children, (child, index) => {
         if( child.key === activeKey )
           foundIndex = index;
       } );
 
-      this.setState( { focusedIndex: foundIndex } );
+      this.setState( { selectedIndex: foundIndex } );
     }
   }
 
-  _focusIndex( index ) {
-    this.setState( { focusedIndex: index });
+  _selectIndex( index ) {
+    this.setState( { selectedIndex: index });
   }
 
-  focusPrevious() {
-    if( this.state.focusedIndex > 0 )
-      this._focusIndex( this.state.focusedIndex - 1 );
+  selectPrevious() {
+    if( this.state.selectedIndex > 0 )
+      this._selectIndex( this.state.selectedIndex - 1 );
     else if ( this.props.wrapNavigation )
-      this._focusIndex( React.Children.count( this.props.children ) - 1 );
+      this._selectIndex( React.Children.count( this.props.children ) - 1 );
   }
 
-  focusNext() {
-    if( this.state.focusedIndex + 1 < React.Children.count( this.props.children ) )
-      this._focusIndex( this.state.focusedIndex + 1 );
+  selectNext() {
+    if( this.state.selectedIndex + 1 < React.Children.count( this.props.children ) )
+      this._selectIndex( this.state.selectedIndex + 1 );
     else if ( this.props.wrapNavigation )
-      this._focusIndex( 0 );
+      this._selectIndex( 0 );
   }
 
   onKeyDown( event ) {
     var key = event.keyCode;
 
     switch( key ) {
-      case KEYS.UP: this.focusPrevious(); break;
-      case KEYS.DOWN: this.focusNext(); break;
+      case KEYS.UP: this.selectPrevious(); break;
+      case KEYS.DOWN: this.selectNext(); break;
       case KEYS.ENTER: this.onItemExecute(); break;
     }
   }
 
   onItemExecute() {
     if( this.props.onItemExecute )
-      this.props.onItemExecute( this.state.focusedIndex );
+      this.props.onItemExecute( this.state.selectedIndex );
   }
 
   _onItemClick( event ) {
@@ -77,14 +77,14 @@ export default class ReactComponentsListSelect extends React.Component {
     if(!item)
       return; // should be impossible, but who knows...
 
-    this._focusIndex( parseInt( item.dataset.listIndex ) );
+    this._selectIndex( parseInt( item.dataset.listIndex ) );
   }
 
   render() {
 
     var items = React.Children.map( this.props.children, ( child, index) => {
       var additionalClasses = cx("react-components-list-select-item", {
-          "is-focused": ( index === this.state.focusedIndex )
+          "is-selected": ( index === this.state.selectedIndex )
         });
 
       return React.addons.cloneWithProps( child, {
@@ -96,9 +96,9 @@ export default class ReactComponentsListSelect extends React.Component {
 
     return (
       <div className={ cx( "react-components-list-select", this.props.className ) }
+           tabIndex={ this.props.tabIndex }
            onKeyDown={ this.onKeyDown.bind(this) }
-           onClick={ this._onItemClick.bind( this ) }
-           tabIndex={ this.props.tabIndex } >
+           onClick={ this._onItemClick.bind( this ) } >
         {items}
       </div>
     );
