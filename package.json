@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "build/react-components-list-select.js",
   "dependencies": {
+    "keycode": "^2.0.0"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

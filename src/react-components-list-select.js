@@ -16,6 +16,8 @@ export default class ReactComponentsListSelect extends React.Component {
   constructor( props ) {
     super( props );
 
+    // var selectedIndex = ( "selectedIndex" in props ) ? props.selectedIndex : -1;
+
     this.state = {
       selectedIndex: -1
     };
@@ -35,6 +37,7 @@ export default class ReactComponentsListSelect extends React.Component {
   }
 
   _selectIndex( index ) {
+    // TODO: validate index
     this.setState( { selectedIndex: index });
   }
 
